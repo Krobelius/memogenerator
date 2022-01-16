@@ -1,0 +1,24 @@
+name: memogenerator
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  json_annotation: ^4.4.0
+
+  rxdart: ^0.27.3
+  provider: ^6.0.2
+  google_fonts: ^2.2.0
+  http: ^0.13.4
+  uuid: ^3.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
