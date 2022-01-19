@@ -279,9 +279,9 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
 
   @override
   void initState() {
-    super.initState();
     top = widget.parentConstraints.maxWidth / 3;
     left = widget.parentConstraints.maxHeight / 2;
+    super.initState();
   }
 
   @override
