@@ -25,19 +25,22 @@ class _CreateMemePageState extends State<CreateMemePage> {
   Widget build(BuildContext context) {
     return Provider.value(
       value: bloc,
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: AppColors.lemon,
-            centerTitle: true,
-            foregroundColor: AppColors.darkGrey,
-            title: const Text("Создаем мем"),
-            bottom: EditTextBar(),
-          ),
-          body: const SafeArea(
-            child: CreateMemePageContent(),
-          )),
+      child: GestureDetector(
+        onTap: () => bloc.deselectMemeText(),
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: AppColors.lemon,
+              centerTitle: true,
+              foregroundColor: AppColors.darkGrey,
+              title: const Text("Создаем мем"),
+              bottom: EditTextBar(),
+            ),
+            body: const SafeArea(
+              child: CreateMemePageContent(),
+            )),
+      ),
     );
   }
 
@@ -80,15 +83,27 @@ class _EditTextBarState extends State<EditTextBar> {
             return TextField(
               enabled: selectedMemeText != null,
               controller: controller,
+
               onChanged: (text) {
                 if (selectedMemeText != null) {
                   bloc.changeMemeText(selectedMemeText.id, text);
                 }
               },
+                cursorColor: (selectedMemeText != null) ? AppColors.fuchsia : null,
               onEditingComplete: () => bloc.deselectMemeText(),
               decoration:
-                  InputDecoration(filled: true, fillColor: AppColors.darkGray6),
-            );
+                  InputDecoration(filled: true, fillColor: selectedMemeText != null ? AppColors.fuchsia16 : AppColors.darkGray6,
+                      disabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.darkGray38,width: 1)),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.fuchsia38,width: 1)),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.fuchsia,width: 2)),
+                      hintText:
+                  (controller.text.isEmpty && selectedMemeText != null && selectedMemeText.text.isEmpty)
+                      ?
+                  "Ввести текст"
+                      :
+                  null,
+                    hintStyle: TextStyle(fontSize: 16, color: AppColors.darkGray38),
+            ));
           }),
     );
   }
@@ -96,6 +111,7 @@ class _EditTextBarState extends State<EditTextBar> {
   @override
   void dispose() {
     controller.dispose();
+    super.dispose();
   }
 }
 
@@ -201,6 +217,7 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    bool decor = bloc.isSelectedText(widget.memeText.id);
     return Positioned(
       left: left,
       top: top,
@@ -213,15 +230,29 @@ class _DraggableMemeTextState extends State<DraggableMemeText> {
             top = calculateRight(details);
           });
         },
-        child: Container(
-          constraints: BoxConstraints(maxWidth: widget.parentConstraints.maxWidth,maxHeight: widget.parentConstraints.maxHeight,),
-          padding: EdgeInsets.all(padding),
-          color: AppColors.darkGray6,
-          child: Text(
-            widget.memeText.text,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 24),
-          ),
+        child: StreamBuilder<MemeText?>(
+          stream: bloc.observeSelectedMemeText(),
+          builder: (context, snapshot) {
+            final selectedText = snapshot.hasData? snapshot.data! : null;
+            if(selectedText == null) {
+              decor = false;
+            } else {
+              decor = selectedText.id == widget.memeText.id;
+            }
+            return Container(
+              decoration: decor ? BoxDecoration(
+                color: AppColors.darkGray16,
+                border: Border.all(color: AppColors.fuchsia,width: 1)
+              ) : BoxDecoration(color: Colors.transparent, border: null),
+              constraints: BoxConstraints(maxWidth: widget.parentConstraints.maxWidth,maxHeight: widget.parentConstraints.maxHeight,),
+              padding: EdgeInsets.all(padding),
+              child: Text(
+                widget.memeText.text,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            );
+          }
         ),
       ),
     );

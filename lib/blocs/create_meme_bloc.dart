@@ -19,6 +19,13 @@ class CreateMemeBloc {
     selectedMemeTextSubject.add(foundMemeText);
   }
 
+
+  bool isSelectedText(final String id) {
+    final lastTextId = selectedMemeTextSubject.valueOrNull;
+    if(lastTextId != null && lastTextId.id == id) return true;
+    return false;
+  }
+
   void changeMemeText(final String id, final String text) {
     final copiedList = [...memeTextSubject.value];
     final index = copiedList.indexWhere((memeText) => memeText.id == id);
