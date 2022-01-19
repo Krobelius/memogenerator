@@ -199,14 +199,22 @@ class ListTileText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      height: 48,
-      alignment: Alignment.centerLeft,
-      child: Text(
-        memeText.text,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,color: AppColors.darkGrey),
-      ),
+    final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
+    return StreamBuilder<MemeText?>(
+      stream: bloc.observeSelectedMemeText(),
+      builder: (context, snapshot) {
+        final selected = snapshot.hasData ? snapshot.data! : null;
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          height: 48,
+          color: (selected != null && selected.id == memeText.id) ? AppColors.darkGray16 : null,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            memeText.text,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400,color: AppColors.darkGrey),
+          ),
+        );
+      }
     );
   }
 }
@@ -265,9 +273,16 @@ class DraggableMemeText extends StatefulWidget {
 }
 
 class _DraggableMemeTextState extends State<DraggableMemeText> {
-  double top = 0;
-  double left = 0;
+  late double top;
+  late double left;
   final double padding = 8;
+
+  @override
+  void initState() {
+    super.initState();
+    top = widget.parentConstraints.maxWidth / 3;
+    left = widget.parentConstraints.maxHeight / 2;
+  }
 
   @override
   Widget build(BuildContext context) {
