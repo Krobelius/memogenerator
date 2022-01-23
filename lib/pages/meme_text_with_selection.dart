@@ -1,4 +1,4 @@
-import 'package:memogenerator/presentation/create_meme/meme_text.dart';
+import 'package:memogenerator/pages/meme_text.dart';
 
 class MemeTextWithSelection {
   final MemeText memeText;

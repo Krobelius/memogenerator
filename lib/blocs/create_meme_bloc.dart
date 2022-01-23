@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:memogenerator/presentation/create_meme/meme_text.dart';
-import 'package:memogenerator/presentation/create_meme/meme_text_with_selection.dart';
+import 'package:memogenerator/pages/meme_text.dart';
+import 'package:memogenerator/pages/meme_text_with_selection.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
 
