@@ -7,6 +7,7 @@ import 'package:memogenerator/data/models/meme.dart';
 import 'package:memogenerator/data/models/position.dart';
 import 'package:memogenerator/data/models/text_with_position.dart';
 import 'package:memogenerator/data/repositories/memes_repository.dart';
+import 'package:memogenerator/domain/interactors/save_meme_interactor.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_offset.dart';
 import 'package:memogenerator/presentation/create_meme/models/meme_text_with_offset.dart';
@@ -80,30 +81,11 @@ class CreateMemeBloc {
     }).toList();
 
     saveMemeSubscription =
-        _saveMemeInternal(textsWithPosition).asStream().listen((event) {
+        SaveMemeInteractor.getInstance().saveMeme(this.id,textsWithPosition, memePathSubject.value).asStream().listen((event) {
       print("SAVED MEME $event");
     }, onError: (error, stack) => print('ERROR IN SAVE MEME $error $stack'));
   }
 
-  Future<bool> _saveMemeInternal(
-      final List<TextWithPosition> textWithPositions) async {
-    final imagePath = memePathSubject.value;
-    if (imagePath == null) {
-      final meme = Meme(id: id, texts: textWithPositions);
-      return MemesRepository.getInstance().addMemes(meme);
-    } else {
-      final docsPath = await getApplicationDocumentsDirectory();
-      final memePath =
-          "${docsPath.absolute.path}${Platform.pathSeparator}memes";
-      await Directory(memePath).create(recursive: true);
-      final imageName = imagePath.split(Platform.pathSeparator).last;
-      final newImagePath = "$memePath${Platform.pathSeparator}${imageName}";
-      final tempFile = File(imagePath);
-      await tempFile.copy(newImagePath);
-      final meme = Meme(id: id, texts: textWithPositions,memePath: newImagePath);
-      return MemesRepository.getInstance().addMemes(meme);
-    }
-  }
 
   void _subscribeToNewMemeTextOffset() {
     newMemeTextOffsetSubjectSubscription = newMemeTextOffsetSubject

@@ -17,10 +17,16 @@ class MemesRepository {
 
   MemesRepository._internal(this.spData);
 
-  Future<bool> addMemes(final Meme meme) async {
-    final rawMemes = await spData.getMemes();
-    rawMemes.add(json.encode(meme.toJson()));
-    return _setRawMemes(rawMemes);
+  Future<bool> addMeme(final Meme meme) async {
+    final rawMemes = await getMemes();
+    final existMemes = rawMemes.firstWhereOrNull((exMeme) => meme.id == exMeme.id);
+    if(existMemes != null) {
+      final rawIndex = rawMemes.indexWhere((element) => element.id == existMemes.id);
+      rawMemes[rawIndex] = meme;
+    } else {
+      rawMemes.add(meme);
+    }
+    return _setMemes(rawMemes);
   }
 
 
