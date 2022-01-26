@@ -11,9 +11,9 @@ class SaveMemeInteractor{
   static SaveMemeInteractor? _instance;
 
   factory SaveMemeInteractor.getInstance() =>
-      _instance ??= SaveMemeInteractor.internal();
+      _instance ??= SaveMemeInteractor._internal();
 
-  SaveMemeInteractor.internal();
+  SaveMemeInteractor._internal();
 
 
 
@@ -29,6 +29,7 @@ class SaveMemeInteractor{
       final imageName = imagePath.split(Platform.pathSeparator).last;
       final newImagePath = "$memePath${Platform.pathSeparator}${imageName}";
       final tempFile = File(imagePath);
+      final meme = Meme(id: id, texts: textWithPositions,memePath: newImagePath);
       await tempFile.copy(newImagePath);
       return MemesRepository.getInstance().addToMemes(meme);
     }
