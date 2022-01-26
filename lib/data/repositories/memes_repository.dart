@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:memogenerator/data/models/meme.dart';
-import 'package:memogenerator/data/shared_preferences_data_access.dart';
+import 'package:memogenerator/data/shared_preferences_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:collection/collection.dart';
 
