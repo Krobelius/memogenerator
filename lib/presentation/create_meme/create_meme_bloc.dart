@@ -81,7 +81,7 @@ class CreateMemeBloc {
     }).toList();
 
     saveMemeSubscription =
-        SaveMemeInteractor.getInstance().saveMeme(this.id,textsWithPosition, memePathSubject.value).asStream().listen((event) {
+        SaveMemeInteractor.getInstance().saveMeme(id: this.id, textWithPositions: textsWithPosition,imagePath: memePathSubject.value).asStream().listen((event) {
       print("SAVED MEME $event");
     }, onError: (error, stack) => print('ERROR IN SAVE MEME $error $stack'));
   }

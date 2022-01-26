@@ -17,7 +17,7 @@ class MemesRepository {
 
   MemesRepository._internal(this.spData);
 
-  Future<bool> addMeme(final Meme meme) async {
+  Future<bool> addToMemes(final Meme meme) async {
     final rawMemes = await getMemes();
     final existMemes = rawMemes.firstWhereOrNull((exMeme) => meme.id == exMeme.id);
     if(existMemes != null) {

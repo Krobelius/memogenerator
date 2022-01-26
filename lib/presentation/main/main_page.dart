@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => CreateMemePage(
-                    selectedMeme: selectedMemePath,
+                    selectedMemePath: selectedMemePath,
                   ),
                 ),
               );

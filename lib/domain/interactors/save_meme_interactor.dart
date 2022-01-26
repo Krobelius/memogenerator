@@ -16,10 +16,11 @@ class SaveMemeInteractor{
   SaveMemeInteractor.internal();
 
 
-  Future<bool> saveMeme(String id, List<TextWithPosition> textWithPositions, String? imagePath) async {
+
+  Future<bool> saveMeme({ required String id,required List<TextWithPosition> textWithPositions,String? imagePath}) async {
     if(imagePath == null) {
       final meme = Meme(id: id, texts: textWithPositions);
-      return MemesRepository.getInstance().addMeme(meme);
+      return MemesRepository.getInstance().addToMemes(meme);
     } else {
       final docsPath = await getApplicationDocumentsDirectory();
       final memePath =
@@ -29,8 +30,7 @@ class SaveMemeInteractor{
       final newImagePath = "$memePath${Platform.pathSeparator}${imageName}";
       final tempFile = File(imagePath);
       await tempFile.copy(newImagePath);
-      final meme = Meme(id: id, texts: textWithPositions,memePath: newImagePath);
-      return MemesRepository.getInstance().addMeme(meme);
+      return MemesRepository.getInstance().addToMemes(meme);
     }
   }
 }

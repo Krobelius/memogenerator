@@ -12,9 +12,9 @@ import 'package:provider/provider.dart';
 
 class CreateMemePage extends StatefulWidget {
   final String? id;
-  final String? selectedMeme;
+  final String? selectedMemePath;
 
-  const CreateMemePage({Key? key, this.id, this.selectedMeme})
+  const CreateMemePage({Key? key, this.id, this.selectedMemePath})
       : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class _CreateMemePageState extends State<CreateMemePage> {
   @override
   void initState() {
     super.initState();
-    bloc = CreateMemeBloc(id: widget.id, selectedMemePath: widget.selectedMeme);
+    bloc = CreateMemeBloc(id: widget.id, selectedMemePath: widget.selectedMemePath);
   }
 
   @override
@@ -202,7 +202,7 @@ class BottomList extends StatelessWidget {
                   );
                 } else {
                   final memeText = memeTextList[index - 1];
-                  return ListTileText(memeText: memeText);
+                  return BottomMemeText(memeText: memeText);
                 }
               },
             );
@@ -226,16 +226,17 @@ class BottomSeparator extends StatelessWidget {
   }
 }
 
-class ListTileText extends StatelessWidget {
+class BottomMemeText extends StatelessWidget {
   final MemeTextWithSelection memeText;
 
-  const ListTileText({Key? key, required this.memeText}) : super(key: key);
+  const BottomMemeText({Key? key, required this.memeText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<CreateMemeBloc>(context, listen: false);
     return GestureDetector(
       onTap:() => bloc.selectMemeText(memeText.memeText.id),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         height: 48,
