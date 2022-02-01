@@ -74,7 +74,7 @@ class SaveMemeInteractor {
     final extension = imageName.substring(indexOfLastDot);
     final imageNameWithoutExtension = imageName.substring(0, indexOfLastDot);
     final indexOfLastUnderscore = imageName.lastIndexOf('_');
-    if (indexOfLastUnderscore != -1) {
+    if (indexOfLastUnderscore == -1) {
       final correctedNewImagePath =
           "$memePath${Platform.pathSeparator}${imageNameWithoutExtension}_1$extension";
       await tempFile.copy(correctedNewImagePath);
