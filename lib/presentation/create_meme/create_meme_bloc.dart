@@ -66,7 +66,7 @@ class CreateMemeBloc {
               meme.memePath!.split(Platform.pathSeparator).last;
           final fullImagePath =
               "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memePathName}${Platform.pathSeparator}$onlyImageName";
-          memePathSubject.add(meme.memePath);
+          memePathSubject.add(fullImagePath);
         }
       });
     });
