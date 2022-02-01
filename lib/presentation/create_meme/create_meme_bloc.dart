@@ -60,7 +60,15 @@ class CreateMemeBloc {
       }).toList();
       memeTextSubject.add(memeTexts.toList());
       memeTextOffsetsSubject.add(memeTextOffsets);
-      memePathSubject.add(meme.memePath);
+      getApplicationDocumentsDirectory().then((docsDirectory) {
+        if (meme.memePath != null) {
+          final onlyImageName =
+              meme.memePath!.split(Platform.pathSeparator).last;
+          final fullImagePath =
+              "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memePathName}${Platform.pathSeparator}$onlyImageName";
+          memePathSubject.add(meme.memePath);
+        }
+      });
     });
   }
 
@@ -80,12 +88,16 @@ class CreateMemeBloc {
           id: memeText.id, text: memeText.text, position: position);
     }).toList();
 
-    saveMemeSubscription =
-        SaveMemeInteractor.getInstance().saveMeme(id: this.id, textWithPositions: textsWithPosition,imagePath: memePathSubject.value).asStream().listen((event) {
+    saveMemeSubscription = SaveMemeInteractor.getInstance()
+        .saveMeme(
+            id: this.id,
+            textWithPositions: textsWithPosition,
+            imagePath: memePathSubject.value)
+        .asStream()
+        .listen((event) {
       print("SAVED MEME $event");
     }, onError: (error, stack) => print('ERROR IN SAVE MEME $error $stack'));
   }
-
 
   void _subscribeToNewMemeTextOffset() {
     newMemeTextOffsetSubjectSubscription = newMemeTextOffsetSubject
