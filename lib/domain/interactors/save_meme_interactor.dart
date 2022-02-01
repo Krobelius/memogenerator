@@ -24,12 +24,12 @@ class SaveMemeInteractor {
       final meme = Meme(id: id, texts: textWithPositions);
       return MemesRepository.getInstance().addToMemes(meme);
     }
-    await createNewFile(imagePath);
-    final meme = Meme(id: id, texts: textWithPositions, memePath: imagePath);
+    final newImagePath = await createNewFile(imagePath);
+    final meme = Meme(id: id, texts: textWithPositions, memePath: newImagePath);
     return MemesRepository.getInstance().addToMemes(meme);
   }
 
-  Future<void> createNewFile(final String imagePath) async {
+  Future<String> createNewFile(final String imagePath) async {
     final docsPath = await getApplicationDocumentsDirectory();
     final memePath =
         "${docsPath.absolute.path}${Platform.pathSeparator}$memePathName";
@@ -45,7 +45,7 @@ class SaveMemeInteractor {
     final tempFile = File(imagePath);
     if (oldFileWithTheSameName == null) {
       await tempFile.copy(newImagePath);
-      return;
+      return newImagePath;
     }
     final oldFileLength = await (oldFileWithTheSameName as File).length();
     final newFileLength = await tempFile.length();
@@ -56,10 +56,10 @@ class SaveMemeInteractor {
         newImagePath: newImagePath,
         memePath: memePath,
       );
-    }
+    } return newImagePath;
   }
 
-  Future<void> _createFileForDiff({
+  Future<String> _createFileForDiff({
     required final String imageName,
     required final File tempFile,
     required final String newImagePath,
@@ -68,7 +68,7 @@ class SaveMemeInteractor {
     final indexOfLastDot = imageName.lastIndexOf('.');
     if (indexOfLastDot == -1) {
       await tempFile.copy(newImagePath);
-      return;
+      return newImagePath;
     }
     final extension = imageName.substring(indexOfLastDot);
     final imageNameWithoutExtension = imageName.substring(0, indexOfLastDot);
@@ -77,7 +77,7 @@ class SaveMemeInteractor {
       final correctedNewImagePath =
           "$memePath${Platform.pathSeparator}${imageNameWithoutExtension}_1$extension";
       await tempFile.copy(correctedNewImagePath);
-      return;
+      return correctedNewImagePath;
     }
     final suffixNumberString =
         imageNameWithoutExtension.substring(indexOfLastUnderscore + 1);
@@ -86,12 +86,14 @@ class SaveMemeInteractor {
       final correctedNewImagePath =
           "$memePath${Platform.pathSeparator}${imageNameWithoutExtension}_1$extension";
       await tempFile.copy(correctedNewImagePath);
+      return correctedNewImagePath;
     } else {
       final nameWithoutSuffix =
           imageNameWithoutExtension.substring(0, indexOfLastUnderscore);
       final correctedNewImagePath =
           "$memePath${Platform.pathSeparator}${nameWithoutSuffix}_${suffixNumber + 1}$extension";
       await tempFile.copy(correctedNewImagePath);
+      return correctedNewImagePath;
     }
   }
 
