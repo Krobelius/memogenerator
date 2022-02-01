@@ -60,15 +60,16 @@ class CreateMemeBloc {
       }).toList();
       memeTextSubject.add(memeTexts.toList());
       memeTextOffsetsSubject.add(memeTextOffsets);
-      getApplicationDocumentsDirectory().then((docsDirectory) {
-        if (meme.memePath != null) {
-          final onlyImageName =
-              meme.memePath!.split(Platform.pathSeparator).last;
-          final fullImagePath =
-              "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memePathName}${Platform.pathSeparator}$onlyImageName";
-          memePathSubject.add(fullImagePath);
-        }
-      });
+      memePathSubject.add(meme.memePath);
+      // getApplicationDocumentsDirectory().then((docsDirectory) {
+      //   if (meme.memePath != null) {
+      //     final onlyImageName =
+      //         meme.memePath!.split(Platform.pathSeparator).last;
+      //     final fullImagePath =
+      //         "${docsDirectory.absolute.path}${Platform.pathSeparator}${SaveMemeInteractor.memePathName}${Platform.pathSeparator}$onlyImageName";
+      //     memePathSubject.add(fullImagePath);
+      //   }
+      // });
     });
   }
 

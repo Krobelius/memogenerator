@@ -23,17 +23,16 @@ class SaveMemeInteractor {
     if (imagePath == null) {
       final meme = Meme(id: id, texts: textWithPositions);
       return MemesRepository.getInstance().addToMemes(meme);
-    } else {
-      await createNewFile(imagePath);
-      final meme =
-          Meme(id: id, texts: textWithPositions, memePath: imagePath);
-      return MemesRepository.getInstance().addToMemes(meme);
     }
+    await createNewFile(imagePath);
+    final meme = Meme(id: id, texts: textWithPositions, memePath: imagePath);
+    return MemesRepository.getInstance().addToMemes(meme);
   }
 
   Future<void> createNewFile(final String imagePath) async {
     final docsPath = await getApplicationDocumentsDirectory();
-    final memePath = "${docsPath.absolute.path}${Platform.pathSeparator}$memePathName";
+    final memePath =
+        "${docsPath.absolute.path}${Platform.pathSeparator}$memePathName";
     final memesDirectory = Directory(memePath);
     await memesDirectory.create(recursive: true);
 
@@ -89,9 +88,9 @@ class SaveMemeInteractor {
       await tempFile.copy(correctedNewImagePath);
     } else {
       final nameWithoutSuffix =
-      imageNameWithoutExtension.substring(0, indexOfLastUnderscore);
+          imageNameWithoutExtension.substring(0, indexOfLastUnderscore);
       final correctedNewImagePath =
-          "$memePath${Platform.pathSeparator}${nameWithoutSuffix}${suffixNumber + 1}$extension";
+          "$memePath${Platform.pathSeparator}${nameWithoutSuffix}_${suffixNumber + 1}$extension";
       await tempFile.copy(correctedNewImagePath);
     }
   }
