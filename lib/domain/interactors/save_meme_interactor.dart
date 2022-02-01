@@ -46,17 +46,18 @@ class SaveMemeInteractor {
     final tempFile = File(imagePath);
     if (oldFileWithTheSameName == null) {
       await tempFile.copy(newImagePath);
+      return;
     }
     final oldFileLength = await (oldFileWithTheSameName as File).length();
     final newFileLength = await tempFile.length();
-    if (oldFileLength == newFileLength) {
+    if (oldFileLength != newFileLength) {
+      return _createFileForDiff(
+        imageName: imageName,
+        tempFile: tempFile,
+        newImagePath: newImagePath,
+        memePath: memePath,
+      );
     }
-    return _createFileForDiff(
-      imageName: imageName,
-      tempFile: tempFile,
-      newImagePath: newImagePath,
-      memePath: memePath,
-    );
   }
 
   Future<void> _createFileForDiff({
